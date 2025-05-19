@@ -1,0 +1,139 @@
+⚙️ Funcionalidades principais
+Para Clientes:
+Cadastro e login com autenticação segura
+
+Visualização do catálogo de serviços com preços e descrições
+
+Sistema de agendamento com seleção de datas e horários disponíveis
+
+Pagamento parcial antecipado para garantir o horário
+
+Confirmação de agendamento via e-mail ou notificação
+
+Acesso à galeria com fotos e vídeos dos serviços realizados
+
+username: wellysonmachado
+email: wellyson.machado01@gmail.com
+password: 1546826440
+
+
+curl:
+
+{ 
+	CADASTRO E LOGIN DE USUARIOS
+---------------------------------------------------------------------------------------------------------------
+curl -X POST http://127.0.0.1:8000/api/token/ -H "Content-Type: application/json" -d "{\"username\": \"wellysonmachado\", \"password\": \"1546826440\"}"
+
+token e refresh:
+
+refresh: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0Nzc0MjI3NiwiaWF0IjoxNzQ3NjU1ODc2LCJqdGkiOiJmYjk1ZWY4MzJjNDQ0ZWZkYjkwM2Y2NDNkZjA5MzZhMiIsInVzZXJfaWQiOjF9.P6x3gjtiLmgfJdVxAcSFzAJguhF3aPnl-R4eheuf6Mg
+
+acess: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjU2MTc2LCJpYXQiOjE3NDc2NTU4NzYsImp0aSI6IjRmNmMwY2RiNDVkNzQ2NTJiNzAzNzUzYzFkMmYzNmI3IiwidXNlcl9pZCI6MX0.Dn900ZvkQBIaoYt2gvGMY89MLQlrCXI6LlWDg7vPtME
+
+-------------------------------------------------------------------------------------------------------------------
+registrar novos usuarios no sistema:
+
+curl -X POST http://127.0.0.1:8000/api/users/register/ -H "Content-Type: application/json" -d "{\"username\": \"cliente2\", \"email\": \"cliente2@email.com\", \"password\": \"12345678\", \"is_nail_designer\": false}"
+
+--------------------------------------------------------------------------------------------------------------------
+Faça login para obter o token:
+
+curl -X POST http://127.0.0.1:8000/api/token/ -H "Content-Type: application/json" -d "{\"username\": \"cliente2\", \"password\": \"12345678\"}"
+
+Use o token pra acessar o /me # RETORNA OS DADOS DO USUARIO AUTENTICADO
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjYwODU5LCJpYXQiOjE3NDc2NjA1NTksImp0aSI6IjAxNDI0MDdkNGQ1YjRiYjI5MmFhZGJhNTVmYjI1YTFhIiwidXNlcl9pZCI6M30.JBoTpglt4YovOxnGnKkCI4Sbe7twwbtyOOrWUsUKJcQ" http://127.0.0.1:8000/api/users/me/
+--------------------------------------------------------------------------------------------------------------------
+
+
+	SERVIÇOS
+---------------------------------------------------------------------------------------------------------------
+Listar serviços (GET publico)
+curl http://127.0.0.1:8000/api/services/
+
+Criar serviços
+curl -X POST http://127.0.0.1:8000/api/services/ ^
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3Njc1MTIxLCJpYXQiOjE3NDc2NzQ4MjEsImp0aSI6Ijc2MmJhM2IxNmI1ZjQwZWM4NzhjOGI1MjEwY2VhNmFlIiwidXNlcl9pZCI6MX0.Q50yXGpGRi2YRVtVcqx3Msffqm5yLsDfyMrcvIin41I" ^
+-H "Content-Type: application/json" ^
+-d "{\"name\": \"Francesinha com glitter ROSA\", \"description\": \"Estilo delicado com glitter.\", \"price\": 45.00, \"duration_minutes\": 60}"
+
+-----------------------------------------------------------------------------------------------------------------------
+
+	AGENDAMENTOS
+-----------------------------------------------------------------------------------------------------------------------
+Criar agendamento (cliente autenticado):
+
+curl -X POST http://127.0.0.1:8000/api/appointments/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjYxNDc3LCJpYXQiOjE3NDc2NjExNzcsImp0aSI6ImNhZmJkODFiYTViYTQ5Y2NhOGIxOWE0NDhhOGZmNTkzIiwidXNlcl9pZCI6M30.qL0SC8xC8kTwbi44yUypFANq0cbjfX_plPlo2Rnf9CY" -H "Content-Type: application/json" -d "{\"service\": 1, \"scheduled_datetime\": \"2025-05-22T14:00:00Z\"}"
+-----------------------------------------------------------------------------------------------------------------------
+
+Criar agendamento com observação:
+
+curl -X POST http://127.0.0.1:8000/api/appointments/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjYzMDYzLCJpYXQiOjE3NDc2NjI3NjMsImp0aSI6IjM0YTRmMzhlYmNjZjRmYmZhMjdlYzM2ZTljNWVlY2Y3IiwidXNlcl9pZCI6M30.Ka0W1k5i--8rEdrkqJbsMVZbHCoZLXDsA0BXERpeCEw" -H "Content-Type: application/json" -d "{\"service\": 1, \"scheduled_datetime\": \"2025-05-22T15:00:00Z\", \"notes\": \"Gostaria de algo mais delicado com glitter.\"}"
+-----------------------------------------------------------------------------------------------------------------------
+
+Listar agendamentos: | Cliente vê só os próprios | Nail designer vê todos
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjczMjIwLCJpYXQiOjE3NDc2NzI5MjAsImp0aSI6IjE4YjAzZTdjMjZlMDQ0YTA5NmNlYzQwZjNmNGRiYWZkIiwidXNlcl9pZCI6M30.BP_v5-_dpXCcozOWQN5s1Ih2vOWdSQVyk244jOWBu90" http://127.0.0.1:8000/api/appointments/
+-----------------------------------------------------------------------------------------------------------------------
+
+NAIL DESIGNER CONFIRMANDO AGENDAMENTO:
+
+curl -X PATCH http://127.0.0.1:8000/api/appointments/4/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjYyMjcyLCJpYXQiOjE3NDc2NjE5NzIsImp0aSI6ImZjYjdkNGEzZWM5ODRkYzVhMWY1ODdhYWNjNzZmMmVlIiwidXNlcl9pZCI6MX0.GGrrR5z-r_4OXU7aJ6eXwMjuYO8pkOJdajHhyyeFQXk" -H "Content-Type: application/json" -d "{\"status\": \"confirmed\"}"
+-----------------------------------------------------------------------------------------------------------------------
+
+#ENDPOINT /MY ACESSO DIRETO SOMENTOS AOS AGENDAMENTO DO "CLIENTE"
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjYzNTA0LCJpYXQiOjE3NDc2NjMyMDQsImp0aSI6IjhiZmIxYzEzODVmOTRhODY4NjJkMWMzOWU3N2JjMzYwIiwidXNlcl9pZCI6MX0.xML0Z5vTyYfwJwQtYic9eA4yskr6vQ47xiaTThd8zOg" http://127.0.0.1:8000/api/appointments/my/
+-----------------------------------------------------------------------------------------------------------------------
+
+#BUSCAR AGENDAMENTOS FILTRANDO PELOS STATUS
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjczMDI2LCJpYXQiOjE3NDc2NzI3MjYsImp0aSI6ImM1N2NiNTNhN2YzODRhY2JiYjk5YWZiODc2MDY0MjBjIiwidXNlcl9pZCI6MX0.HlyZAGDWv5RtJkmJsWHyym6C-DFnxuJPCKePu8wcip0" "http://127.0.0.1:8000/api/appointments/?status=await_"
+-----------------------------------------------------------------------------------------------------------------------
+
+#BUSCAR AGENDAMENTOS POR DATA
+
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjY0MTc1LCJpYXQiOjE3NDc2NjM4NzUsImp0aSI6IjlhODVjNGEwZjI0ZjQ2Y2NiYTU5M2NiZDQ5MmZhZDExIiwidXNlcl9pZCI6MX0.2LYUSpkCfFweSQ-Y__mzP4kbtMyaJ_SUShF08CorfbA" "http://127.0.0.1:8000/api/appointments/?scheduled_datetime__date=2025-05-22"
+-----------------------------------------------------------------------------------------------------------------------
+
+TESTE DUPLICIDADE DE HORARIO/AGENDAMENTO ( PROBIDO ) 
+
+curl -X POST http://127.0.0.1:8000/api/appointments/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjY0OTg1LCJpYXQiOjE3NDc2NjQ2ODUsImp0aSI6IjFmZTAyMWQ4OTZhYTRlNzc5Nzk4ODcwMjg1MDYyYzdlIiwidXNlcl9pZCI6M30.lazue9M8cP613FqIOFJB1HEwnW3GQhZ4eLQb6Yuw5Fo" -H "Content-Type: application/json" -d "{\"service\": 1, \"scheduled_datetime\": \"2025-05-22T16:00:00Z\", \"notes\": \"Teste de horário livre.\"}"
+
+
+curl -X POST http://127.0.0.1:8000/api/appointments/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjY0OTg1LCJpYXQiOjE3NDc2NjQ2ODUsImp0aSI6IjFmZTAyMWQ4OTZhYTRlNzc5Nzk4ODcwMjg1MDYyYzdlIiwidXNlcl9pZCI6M30.lazue9M8cP613FqIOFJB1HEwnW3GQhZ4eLQb6Yuw5Fo" -H "Content-Type: application/json" -d "{\"service\": 1, \"scheduled_datetime\": \"2025-05-22T15:00:00Z\", \"notes\": \"Tentativa duplicada.\"}"
+
+-----------------------------------------------------------------------------------------------------------------------
+TESTANDO: CLIENTES SO PODEM MUDAR O PROPRIO AGENDAMENTO PARA "CANCELLED"
+
+{"id":7,"scheduled_datetime":"2025-05-22T14:00:00Z","status":"pending","notes":"","created_at":"2025-05-19T13:30:37.616838Z","client":3,"service":1}
+{"id":2,"scheduled_datetime":"2025-05-22T14:00:00Z","status":"pending","notes":"","created_at":"2025-05-19T13:16:19.776212Z","client":3,"service":1}
+
+
+curl -X PATCH http://127.0.0.1:8000/api/appointments/7/ ^
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjY2Mjg1LCJpYXQiOjE3NDc2NjU5ODUsImp0aSI6IjhmY2I3NDhjYjc0YjRlYzdiZDQ0MDFkMDc0YWFmZWRiIiwidXNlcl9pZCI6M30.JK4omQnPA4Xor-jt_hwHy3tFZs-HuiWBEOBAwxWGMqs" ^
+-H "Content-Type: application/json" ^
+-d "{\"status\": \"cancelled\"}"
+
+-----------------------------------------------------------------------------------------------------------------------
+NAIL DESIGNER APROVA AGENDAMENTO:
+
+curl -X PATCH http://127.0.0.1:8000/api/appointments/5/ ^
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjczMDI2LCJpYXQiOjE3NDc2NzI3MjYsImp0aSI6ImM1N2NiNTNhN2YzODRhY2JiYjk5YWZiODc2MDY0MjBjIiwidXNlcl9pZCI6MX0.HlyZAGDWv5RtJkmJsWHyym6C-DFnxuJPCKePu8wcip0" ^
+-H "Content-Type: application/json" ^
+-d "{\"status\": \"awaiting_payment\"}"
+
+--------------------------------------------------------------
+PAGAMENTO CONFIRMADO
+curl -X PATCH http://127.0.0.1:8000/api/appointments/6/ ^
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjczMjIwLCJpYXQiOjE3NDc2NzI5MjAsImp0aSI6IjE4YjAzZTdjMjZlMDQ0YTA5NmNlYzQwZjNmNGRiYWZkIiwidXNlcl9pZCI6M30.BP_v5-_dpXCcozOWQN5s1Ih2vOWdSQVyk244jOWBu90" ^
+-H "Content-Type: application/json" ^
+-d "{\"is_partial_paid\": true}"
+
+
+
+
+
+admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3NjczMDI2LCJpYXQiOjE3NDc2NzI3MjYsImp0aSI6ImM1N2NiNTNhN2YzODRhY2JiYjk5YWZiODc2MDY0MjBjIiwidXNlcl9pZCI6MX0.HlyZAGDWv5RtJkmJsWHyym6C-DFnxuJPCKePu8wcip0
+
+agendamento : {"id":5,"scheduled_datetime":"2025-05-22T14:00:00Z","status":"pending","notes":"","created_at":"2025-05-19T13:26:56.504672Z","client":3,"service":1}
