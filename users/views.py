@@ -1,10 +1,11 @@
 from rest_framework import generics
-from .serializers import RegisterSerializer
-from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import RegisterSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import get_user_model
+
+from .serializers import RegisterSerializer, CustomTokenObtainPairSerializer  # <- importar os dois
 
 User = get_user_model()
 
@@ -18,3 +19,6 @@ class MeView(APIView):
     def get(self, request):
         serializer = RegisterSerializer(request.user)
         return Response(serializer.data)
+
+class CustomTokenObtainPairView(TokenObtainPairView):  # <- nova view de login
+    serializer_class = CustomTokenObtainPairSerializer

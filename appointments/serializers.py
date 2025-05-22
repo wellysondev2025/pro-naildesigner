@@ -1,7 +1,24 @@
 from rest_framework import serializers
 from .models import Appointment
+from users.models import User
+from services.models import Service
+from services.serializers import ServiceSerializer  # Usa o serializer já existente
+
+# Serializer simples só com os dados necessários do cliente
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'phone']
+
+
 
 class AppointmentSerializer(serializers.ModelSerializer):
+    client = ClientSerializer(read_only=True)
+    service = serializers.PrimaryKeyRelatedField(
+        queryset=Service.objects.all()
+    )  # <-- Altere aqui para aceitar o ID do serviço
+    service_detail = ServiceSerializer(source='service', read_only=True)
+
     class Meta:
         model = Appointment
         fields = '__all__'
@@ -28,8 +45,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 allowed = (current_status == 'pending' and status == 'awaiting_payment') \
                     or (status in ['confirmed', 'completed', 'cancelled'])
                 if not allowed:
-                    raise serializers.ValidationError(f"Nail Designer não pode alterar de '{current_status}' para '{status}'.")
-
+                    raise serializers.ValidationError(
+                        f"Nail Designer não pode alterar de '{current_status}' para '{status}'."
+                    )
             else:
                 if status != 'cancelled':
                     raise serializers.ValidationError("Clientes só podem cancelar seus agendamentos.")
@@ -44,12 +62,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         return data
 
-
-
     def get_fields(self):
         fields = super().get_fields()
         request = self.context.get('request')
         if request and not request.user.is_nail_designer:
-            # Cliente só pode editar o campo 'status' se for para cancelar
             fields['status'].read_only = False
         return fields
