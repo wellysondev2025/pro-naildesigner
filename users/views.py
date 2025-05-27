@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 
-from .serializers import RegisterSerializer, CustomTokenObtainPairSerializer  # <- importar os dois
+from .serializers import RegisterSerializer, CustomTokenObtainPairSerializer, UserSerializer
 
 User = get_user_model()
 
@@ -17,8 +17,8 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = RegisterSerializer(request.user)
+        serializer = UserSerializer(request.user)
         return Response(serializer.data)
 
-class CustomTokenObtainPairView(TokenObtainPairView):  # <- nova view de login
+class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
